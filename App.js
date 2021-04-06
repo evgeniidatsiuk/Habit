@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, FlatList } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import HabitView from './components/Habit/View/index';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import getLast5Days from './hooks/getLats5Days'
 
 const styles = StyleSheet.create({
   container: {
@@ -25,9 +25,21 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 36,
   },
+  dates: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 5,
+  },
+  primaryDate: {
+    color: '#000',
+  },
+  secondaryDate: {
+    color: '#515151',
+  },
 });
 
-const { container, header, title, text } = styles;
+const { container, header, title, text, primaryDate, secondaryDate } = styles;
 
 const habits = [
   {
@@ -72,6 +84,7 @@ const habits = [
   },
 ];
 
+const dates = getLast5Days();
 
 export default function App() {
   return (
@@ -82,12 +95,29 @@ export default function App() {
       </View>
       <View style={header}>
         <Text style={title}>Habit</Text>
-        <Text style={text}>2 3 4 5 6</Text>
+        <Text style={text}>
+          {dates.map((date, index) => (
+            <View style={styles.dates}>
+              <Text
+                style={index !== dates.length - 1 ? secondaryDate : primaryDate}
+              >
+                {date.date}
+              </Text>
+              <Text
+                style={index !== dates.length - 1 ? secondaryDate : primaryDate}
+              >
+                {date.weekday}
+              </Text>
+            </View>
+          ))}
+        </Text>
       </View>
       <FlatList
         data={habits}
         renderItem={({ item }) => <HabitView item={item} />}
         keyExtractor={(item) => item.id.toString()}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
       />
     </View>
   );

@@ -27,6 +27,7 @@ export default function HabitView({ item }) {
 
   const { component, progress } = styles;
   
+
   return (
     <TouchableOpacity style={component} onPress={() => setHabit(Object.assign(habit, {progress: habit.progress + 5}))}>
       <View style={progress} />

@@ -3,7 +3,7 @@ import {Switch, Text, TextInput, View} from "react-native";
 import {styles} from './style'
 import {HorizontalRule} from "../../HorizontalRule";
 
-export const CreateHabit = () => {
+export default function CreateHabit () {
     const [color, setColor] = useState('green')
 
     const [isEnabledNotification, setIsEnabledNotification] = useState(false);
@@ -49,7 +49,7 @@ export const CreateHabit = () => {
 
                 <View style={styles.repeatContainer}>
                     <Text style={styles.repeatTitle}>Повторяти</Text>
-                    <Text style={styles.repeatTitle}>кожного дня ></Text>
+                    <Text style={styles.repeatTitle}>кожного дня</Text>
                 </View>
 
                 <HorizontalRule/>

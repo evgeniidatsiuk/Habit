@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, FlatList } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import HabitView from './components/Habit/View/index';
-import getLast5Days from './hooks/getLats5Days'
+import getLast5Days from './hooks/getLast5Days'
 
 const styles = StyleSheet.create({
   container: {

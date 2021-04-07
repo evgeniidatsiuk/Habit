@@ -26,7 +26,7 @@ function formatWeekday(wd) {
   return wd;
 }
 
-function formateDate(d) {
+function formatDate(d) {
   const date = d.getDate();
   const weekday = formatWeekday(d.getDay());
 
@@ -35,12 +35,14 @@ function formateDate(d) {
 }
 
 export default function getLast5Days() {
-  var result = [];
-  for (var i = 5; i > 0; i = i - 1) {
-    var d = new Date();
-    d.setDate(d.getDate() - i);
-    result.push(formateDate(d));
+  const last5Days = [];
+
+  for (let i = 5; i > 0; i = i - 1) {
+    const currentDate = new Date();
+    currentDate.setDate(currentDate.getDate() - i);
+
+    last5Days.push(formatDate(currentDate));
   }
 
-  return result;
+  return last5Days;
 }

@@ -58,6 +58,9 @@ export const styles = StyleSheet.create({
             justifyContent: 'space-between',
             paddingTop: 20,
         },
+        remindTitle: {
+            fontSize: 14,
+        },
         remindSwitch: {
             alignItems: 'center'
         },

@@ -38,7 +38,7 @@ export const CreateHabit = () => {
 
             <View style={styles.root}>
                 <Text styles={styles.nameTitle}>Мотивуй себе</Text>
-                <TextInput styles={styles.nameInput} maxLength={100} autoFocus={true}
+                <TextInput styles={styles.nameInput} maxLength={100}
                            placeholder={"А ну-ка давай !!!"}
                            paddingTop={20}
                            paddingBottom={10}

@@ -143,7 +143,7 @@ export default function App() {
         snapPoints={[850, 100, 0]}
         borderRadius={10}
         renderContent={renderContent}
-      />§
+      />
     </>
   );
 }

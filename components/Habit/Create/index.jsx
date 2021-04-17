@@ -4,11 +4,13 @@ import {Dimensions, Pressable, Switch, Text, TextInput, View} from "react-native
 import {HorizontalRule} from "../../HorizontalRule";
 import BottomSheetBehavior from 'reanimated-bottom-sheet';
 import {SelectColor} from "../../Select/Color";
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default function CreateHabit({parentRef}) {
     const [color, setColor] = useState('#008000')
     const [howMuchRepeat, setHowMuchRepeat] = useState('кожного дня');
     const [isEnabledNotification, setIsEnabledNotification] = useState(false);
+    const [date, setDate] = useState(new Date());
     const sheetRef = useRef(null);
 
     const renderContent = () => (
@@ -88,13 +90,26 @@ export default function CreateHabit({parentRef}) {
 
                 <View style={styles.remindContainer}>
                     <Text style={styles.remindTitle}>Нагадати мені</Text>
-                    <Switch style={styles.remindSwitch} onValueChange={toggleSwitchNotification}
+                    <Switch style={styles.remindSwitch} trackColor={{true: color, false: 'white'}}
+                            onValueChange={toggleSwitchNotification}
                             value={isEnabledNotification}/>
                 </View>
+
 
                 <HorizontalRule/>
 
             </View>
+
+            {isEnabledNotification && <DateTimePicker
+                value={date}
+                mode='countdown'
+                display="default"
+                is24Hour={true}
+                onChange={(e, value) => {
+                    console.log('value', value)
+                    setDate(value)
+                }}
+            />}
 
             <BottomSheetBehavior
                 ref={sheetRef}

@@ -2,12 +2,12 @@ import React from 'react';
 import {View} from "react-native";
 import {Color} from "../../Color";
 
-export const SelectColor = () => {
+export const SelectColor = ({setColor, sheetRef}) => {
     const colors = ['#7fffd4', '#8a2be2', '#ff4500', '#008000', '#0000FF', '#ffc0cb', '#dfff00', '#fff93e', '#242582'];
     const items = []
 
     for (const [index, value] of colors.entries()) {
-        items.push(<Color key={index} color={value}/>)
+        items.push(<Color key={index} sheetRef={sheetRef} color={value} setColor={setColor}/>)
     }
 
     return (

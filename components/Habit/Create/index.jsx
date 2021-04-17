@@ -5,19 +5,19 @@ import {HorizontalRule} from "../../HorizontalRule";
 import BottomSheetBehavior from 'reanimated-bottom-sheet';
 import {SelectColor} from "../../Select/Color";
 
-const renderContent = () => (
-    <View style={{
-        backgroundColor: '#fff', width: '100%', height: '100%'
-    }}>
-        <SelectColor/>
-    </View>
-);
-
 export default function CreateHabit({parentRef}) {
     const [color, setColor] = useState('#008000')
     const [howMuchRepeat, setHowMuchRepeat] = useState('кожного дня');
     const [isEnabledNotification, setIsEnabledNotification] = useState(false);
     const sheetRef = useRef(null);
+
+    const renderContent = () => (
+        <View style={{
+            backgroundColor: '#fff', width: '100%', height: '100%'
+        }}>
+            <SelectColor sheetRef={sheetRef} setColor={setColor}/>
+        </View>
+    );
 
     const toggleSwitchNotification = () => setIsEnabledNotification(previousState => !previousState);
 

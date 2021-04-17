@@ -37,7 +37,7 @@ function formatDate(d) {
 export default function getLast5Days() {
   const last5Days = [];
 
-  for (let i = 5; i > 0; i = i - 1) {
+  for (let i = 5; i >= 0; i--) {
     const currentDate = new Date();
     currentDate.setDate(currentDate.getDate() - i);
 

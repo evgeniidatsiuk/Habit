@@ -1,12 +1,23 @@
-import React, {useState} from 'react';
-import {Switch, Text, TextInput, View} from "react-native";
+import React, {useRef, useState} from 'react';
 import {styles} from './style'
+import {Dimensions, Pressable, Switch, Text, TextInput, View} from "react-native";
 import {HorizontalRule} from "../../HorizontalRule";
+import BottomSheetBehavior from 'reanimated-bottom-sheet';
+import {SelectColor} from "../../Select/Color";
 
-export default function CreateHabit () {
-    const [color, setColor] = useState('green')
+const renderContent = () => (
+    <View style={{
+        backgroundColor: '#fff', width: '100%', height: '100%'
+    }}>
+        <SelectColor/>
+    </View>
+);
 
+export default function CreateHabit({parentRef}) {
+    const [color, setColor] = useState('#008000')
+    const [howMuchRepeat, setHowMuchRepeat] = useState('кожного дня');
     const [isEnabledNotification, setIsEnabledNotification] = useState(false);
+    const sheetRef = useRef(null);
 
     const toggleSwitchNotification = () => setIsEnabledNotification(previousState => !previousState);
 
@@ -20,7 +31,9 @@ export default function CreateHabit () {
                 }}
             >
                 <View style={styles.container}>
-                    <Text style={styles.cancelTitle}>Відмінити!</Text>
+                    <Pressable onPress={() => parentRef.current.snapTo(2)}>
+                        <Text style={styles.cancelTitle}>Відмінити!</Text>
+                    </Pressable>
                     <Text style={styles.mainTitle}>Створити звичку</Text>
                     <Text style={styles.saveTitle}>Зберегти</Text>
                 </View>
@@ -49,14 +62,26 @@ export default function CreateHabit () {
 
                 <View style={styles.repeatContainer}>
                     <Text style={styles.repeatTitle}>Повторяти</Text>
-                    <Text style={styles.repeatTitle}>кожного дня</Text>
+                    <Pressable onPress={() => sheetRef.current.snapTo(0)}>
+                        <Text style={styles.repeatTitle}>{howMuchRepeat}</Text>
+                    </Pressable>
                 </View>
 
                 <HorizontalRule/>
 
                 <View style={styles.colorContainer}>
                     <Text style={styles.colorTitle}>Виберіть колір</Text>
-                    <Text style={styles.colorTitle}>()</Text>
+                    <Pressable onPress={() => sheetRef.current.snapTo(0)}>
+                        <View
+                            style={{
+                                borderRadius: Math.round(Dimensions.get('window').width + Dimensions.get('window').height) / 2,
+                                width: 25,
+                                height: 25,
+                                backgroundColor: color,
+                            }}
+                        >
+                        </View>
+                    </Pressable>
                 </View>
 
                 <HorizontalRule/>
@@ -70,6 +95,14 @@ export default function CreateHabit () {
                 <HorizontalRule/>
 
             </View>
+
+            <BottomSheetBehavior
+                ref={sheetRef}
+                snapPoints={[850, 100, 0]}
+                borderRadius={10}
+                initialSnap={1}
+                renderContent={renderContent}
+            />
         </>
     );
 }

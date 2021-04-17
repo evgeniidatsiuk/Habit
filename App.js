@@ -1,9 +1,8 @@
-import React, { useRef } from 'react';
-import { StyleSheet, Text, View, FlatList, Pressable } from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
+import React, {useRef} from 'react';
+import {FlatList, Pressable, StyleSheet, Text, View} from 'react-native';
+import {AntDesign} from '@expo/vector-icons';
 import HabitView from './components/Habit/View/index';
 import getLast5Days from './hooks/getLast5Days';
-import BottomSheet from 'reanimated-bottom-sheet';
 import CreateHabit from './components/Habit/Create/index';
 import BottomSheetBehavior from 'reanimated-bottom-sheet';
 
@@ -89,39 +88,40 @@ const habits = [
 
 const dates = getLast5Days();
 
-const renderContent = () => (
-  <View style={{ backgroundColor: '#fff', width: '100%', height: '100%' }}>
-    <CreateHabit />
-  </View>
-);
-
 export default function App() {
   const sheetRef = useRef(null);
 
+  const renderContent = () => (
+      <View style={{backgroundColor: '#fff', width: '100%', height: '100%'}}>
+        <CreateHabit parentRef={sheetRef}/>
+      </View>
+  );
+
+
   return (
-    <>
-      <View style={container}>
-        <View style={header}>
-          <AntDesign name="menuunfold" size={36} color="black" />
-          <Pressable onPress={() => sheetRef.current.snapTo(0)}>
-            <AntDesign name="plus" size={36} color="black" />
-          </Pressable>
+      <>
+        <View style={container}>
+          <View style={header}>
+            <AntDesign name="menuunfold" size={36} color="black"/>
+            <Pressable onPress={() => sheetRef.current.snapTo(0)}>
+              <AntDesign name="plus" size={36} color="black"/>
+            </Pressable>
         </View>
         <View style={header}>
           <Text style={title}>Habit</Text>
           <Text style={text}>
             {dates.map((date, index) => (
-              <View style={styles.dates}>
-                <Text
-                  style={
-                    index !== dates.length - 1 ? secondaryDate : primaryDate
-                  }
-                >
-                  {date.date}
-                </Text>
-                <Text
-                  style={
-                    index !== dates.length - 1 ? secondaryDate : primaryDate
+                <View style={styles.dates} key={index}>
+                  <Text
+                      style={
+                        index !== dates.length - 1 ? secondaryDate : primaryDate
+                      }
+                  >
+                    {date.date}
+                  </Text>
+                  <Text
+                      style={
+                        index !== dates.length - 1 ? secondaryDate : primaryDate
                   }
                 >
                   {date.weekday}
@@ -139,10 +139,11 @@ export default function App() {
         />
       </View>
       <BottomSheetBehavior
-        ref={sheetRef}
-        snapPoints={[850, 100, 0]}
-        borderRadius={10}
-        renderContent={renderContent}
+          ref={sheetRef}
+          snapPoints={[850, 100, 0]}
+          borderRadius={10}
+          initialSnap={2}
+          renderContent={renderContent}
       />
     </>
   );

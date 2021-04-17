@@ -1,7 +1,7 @@
 import React, {useRef} from 'react';
 import {FlatList, Pressable, StyleSheet, Text, View} from 'react-native';
 import {AntDesign} from '@expo/vector-icons';
-import HabitView from './components/Habit/View/index';
+import HabitView from './components/Habit/View';
 import getLast5Days from './hooks/getLast5Days';
 import CreateHabit from './components/Habit/Create/index';
 import BottomSheetBehavior from 'reanimated-bottom-sheet';

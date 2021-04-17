@@ -140,7 +140,7 @@ export default function App() {
       </View>
       <BottomSheetBehavior
           ref={sheetRef}
-          snapPoints={[850, 100, 0]}
+          snapPoints={[855, 0, 0]}
           borderRadius={10}
           initialSnap={2}
           renderContent={renderContent}

@@ -60,6 +60,7 @@ export const styles = StyleSheet.create({
         },
         remindTitle: {
             fontSize: 14,
+            paddingBottom: 25
         },
         remindSwitch: {
             alignItems: 'center'

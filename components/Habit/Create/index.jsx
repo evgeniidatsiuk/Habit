@@ -27,7 +27,7 @@ export default function CreateHabit({parentRef}) {
         <>
             <View
                 style={{
-                    paddingTop: 60,
+                    paddingTop: 20,
                     paddingHorizontal: 20,
                     backgroundColor: color
                 }}
@@ -113,7 +113,7 @@ export default function CreateHabit({parentRef}) {
 
             <BottomSheetBehavior
                 ref={sheetRef}
-                snapPoints={[850, 100, 0]}
+                snapPoints={[855, 100, 0]}
                 borderRadius={10}
                 initialSnap={1}
                 renderContent={renderContent}

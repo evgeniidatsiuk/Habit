@@ -62,6 +62,8 @@ export default function CreateHabit({parentRef}) {
             color,
             howMuchRepeat,
             isEnabledNotification,
+            hour: date.getHours(),
+            minute: date.getMinutes(),
             expoPushToken,
             notificationId,
             createdAt: new Date(),

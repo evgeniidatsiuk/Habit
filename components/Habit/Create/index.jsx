@@ -1,12 +1,28 @@
-import React, {useRef, useState} from 'react';
+import Constants from 'expo-constants';
+import * as Notifications from 'expo-notifications';
+import React, {useEffect, useRef, useState} from 'react';
 import {styles} from './style'
-import {Dimensions, Pressable, Switch, Text, TextInput, View} from "react-native";
+import {Alert, Dimensions, Pressable, Switch, Text, TextInput, View} from "react-native";
 import {HorizontalRule} from "../../HorizontalRule";
 import BottomSheetBehavior from 'reanimated-bottom-sheet';
 import {SelectColor} from "../../Select/Color";
 import DateTimePicker from '@react-native-community/datetimepicker';
 
+Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+        shouldShowAlert: true,
+        shouldPlaySound: true,
+        shouldSetBadge: true,
+    }),
+});
+
 export default function CreateHabit({parentRef}) {
+    const [expoPushToken, setExpoPushToken] = useState('');
+    const [notification, setNotification] = useState(false);
+    const notificationListener = useRef();
+    const responseListener = useRef();
+    const [name, setName] = useState('')
+    const [description, setDescription] = useState('')
     const [color, setColor] = useState('#008000')
     const [howMuchRepeat, setHowMuchRepeat] = useState('кожного дня');
     const [isEnabledNotification, setIsEnabledNotification] = useState(false);
@@ -23,6 +39,81 @@ export default function CreateHabit({parentRef}) {
 
     const toggleSwitchNotification = () => setIsEnabledNotification(previousState => !previousState);
 
+    const onSubmit = async () => {
+        Alert.alert('Habit', JSON.stringify({
+            name,
+            description,
+            color,
+            howMuchRepeat,
+            isEnabledNotification,
+            hours: date.getHours(),
+            minutes: date.getMinutes(),
+            expoPushToken,
+            notification
+        }))
+
+        await Notifications.scheduleNotificationAsync({
+            content: {
+                title: name,
+                body: description,
+                data: {},
+            },
+            trigger: {
+                hour: date.getHours(),
+                minute: date.getMinutes()
+            },
+        });
+    }
+
+    useEffect(() => {
+        registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+
+        notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+            setNotification(notification);
+        });
+
+        responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+            console.log(response);
+        });
+
+        return () => {
+            Notifications.removeNotificationSubscription(notificationListener.current);
+            Notifications.removeNotificationSubscription(responseListener.current);
+        };
+    }, []);
+
+    async function registerForPushNotificationsAsync() {
+        let token;
+        if (Constants.isDevice) {
+            const {status: existingStatus} = await Notifications.getPermissionsAsync();
+            let finalStatus = existingStatus;
+            if (existingStatus !== 'granted') {
+                const {status} = await Notifications.requestPermissionsAsync();
+                finalStatus = status;
+            }
+            if (finalStatus !== 'granted') {
+                alert('Failed to get push token for push notification!');
+                return;
+            }
+            token = (await Notifications.getExpoPushTokenAsync()).data;
+            console.log(token);
+        } else {
+            alert('Must use physical device for Push Notifications');
+        }
+
+        if (Platform.OS === 'android') {
+            Notifications.setNotificationChannelAsync('default', {
+                name: 'default',
+                importance: Notifications.AndroidImportance.MAX,
+                vibrationPattern: [0, 250, 250, 250],
+                lightColor: '#FF231F7C',
+            });
+        }
+
+        return token;
+    }
+
+
     return (
         <>
             <View
@@ -36,14 +127,19 @@ export default function CreateHabit({parentRef}) {
                     <Pressable onPress={() => parentRef.current.snapTo(2)}>
                         <Text style={styles.cancelTitle}>Відмінити!</Text>
                     </Pressable>
-                    <Text style={styles.mainTitle}>Створити звичку</Text>
-                    <Text style={styles.saveTitle}>Зберегти</Text>
+                    <Pressable onPress={() => onSubmit()}>
+                        <Text style={styles.mainTitle}>Створити звичку</Text>
+                    </Pressable>
+                    <Pressable onPress={() => onSubmit()}>
+                        <Text style={styles.saveTitle}>Зберегти</Text>
+                    </Pressable>
                 </View>
 
                 <View style={styles.nameContainer}>
                     <Text styles={styles.nameTitle}>Назва</Text>
                     <TextInput styles={styles.nameInput} maxLength={100} autoFocus={true}
                                placeholder={"Задярка, медитація і т.д."}
+                               onChangeText={name => setName(name)}
                                paddingTop={20}
                                paddingBottom={20}
                     />
@@ -55,6 +151,7 @@ export default function CreateHabit({parentRef}) {
                 <Text styles={styles.nameTitle}>Мотивуй себе</Text>
                 <TextInput styles={styles.nameInput} maxLength={100}
                            placeholder={"А ну-ка давай !!!"}
+                           onChangeText={description => setDescription(description)}
                            paddingTop={20}
                            paddingBottom={10}
 
@@ -105,10 +202,7 @@ export default function CreateHabit({parentRef}) {
                 mode='countdown'
                 display="default"
                 is24Hour={true}
-                onChange={(e, value) => {
-                    console.log('value', value)
-                    setDate(value)
-                }}
+                onChange={(e, value) => setDate(value)}
             />}
 
             <BottomSheetBehavior

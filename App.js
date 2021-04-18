@@ -1,4 +1,5 @@
 import React, {useRef} from 'react';
+import 'react-native-get-random-values'
 import {FlatList, Pressable, StyleSheet, Text, View} from 'react-native';
 import {AntDesign} from '@expo/vector-icons';
 import HabitView from './components/Habit/View';

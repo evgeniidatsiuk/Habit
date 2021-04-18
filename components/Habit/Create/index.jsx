@@ -1,8 +1,9 @@
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import React, {useEffect, useRef, useState} from 'react';
+import {v4} from 'uuid';
 import {styles} from './style'
-import {Alert, Dimensions, Pressable, Switch, Text, TextInput, View} from "react-native";
+import {Dimensions, Pressable, Switch, Text, TextInput, View} from "react-native";
 import {HorizontalRule} from "../../HorizontalRule";
 import BottomSheetBehavior from 'reanimated-bottom-sheet';
 import {SelectColor} from "../../Select/Color";
@@ -40,19 +41,7 @@ export default function CreateHabit({parentRef}) {
     const toggleSwitchNotification = () => setIsEnabledNotification(previousState => !previousState);
 
     const onSubmit = async () => {
-        Alert.alert('Habit', JSON.stringify({
-            name,
-            description,
-            color,
-            howMuchRepeat,
-            isEnabledNotification,
-            hours: date.getHours(),
-            minutes: date.getMinutes(),
-            expoPushToken,
-            notification
-        }))
-
-        await Notifications.scheduleNotificationAsync({
+        const notificationId = await Notifications.scheduleNotificationAsync({
             content: {
                 title: name,
                 body: description,
@@ -63,6 +52,20 @@ export default function CreateHabit({parentRef}) {
                 minute: date.getMinutes()
             },
         });
+
+        alert(JSON.stringify({
+            id: await v4(),
+            name,
+            description,
+            color,
+            howMuchRepeat,
+            isEnabledNotification,
+            hours: date.getHours(),
+            minutes: date.getMinutes(),
+            expoPushToken,
+            notification,
+            notificationId
+        }))
     }
 
     useEffect(() => {
@@ -102,7 +105,7 @@ export default function CreateHabit({parentRef}) {
         }
 
         if (Platform.OS === 'android') {
-            Notifications.setNotificationChannelAsync('default', {
+            await Notifications.setNotificationChannelAsync('default', {
                 name: 'default',
                 importance: Notifications.AndroidImportance.MAX,
                 vibrationPattern: [0, 250, 250, 250],

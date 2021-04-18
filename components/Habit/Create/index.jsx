@@ -8,6 +8,8 @@ import {HorizontalRule} from "../../HorizontalRule";
 import BottomSheetBehavior from 'reanimated-bottom-sheet';
 import {SelectColor} from "../../Select/Color";
 import DateTimePicker from '@react-native-community/datetimepicker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
@@ -53,19 +55,30 @@ export default function CreateHabit({parentRef}) {
             },
         });
 
-        alert(JSON.stringify({
+        const habit = JSON.stringify({
             id: await v4(),
             name,
             description,
             color,
             howMuchRepeat,
             isEnabledNotification,
-            hours: date.getHours(),
-            minutes: date.getMinutes(),
             expoPushToken,
-            notification,
-            notificationId
-        }))
+            notificationId,
+            createdAt: new Date(),
+        })
+
+        alert(habit)
+
+        let habits = JSON.parse(await AsyncStorage.getItem('@Habits'))
+
+        if (habits) {
+            habits.push(habit)
+        } else {
+            habits = [habit]
+        }
+
+
+        await AsyncStorage.setItem('@Habits', JSON.stringify(habits))
     }
 
     useEffect(() => {

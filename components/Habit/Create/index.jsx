@@ -19,16 +19,19 @@ Notifications.setNotificationHandler({
     }),
 });
 
-export default function CreateHabit({parentRef}) {
-    const [expoPushToken, setExpoPushToken] = useState('');
-    const [notification, setNotification] = useState(false);
+export default function CreateHabit({parentRef, habit}) {
+
+    console.log('habit create', habit?.id)
+
+    const [expoPushToken, setExpoPushToken] = useState(habit?.expoPushToken || '');
+    const [notification, setNotification] = useState(habit?.notification || false);
     const notificationListener = useRef();
     const responseListener = useRef();
-    const [name, setName] = useState('')
-    const [description, setDescription] = useState('')
-    const [color, setColor] = useState('#008000')
+    const [name, setName] = useState(habit?.name || '')
+    const [description, setDescription] = useState(habit?.description || '')
+    const [color, setColor] = useState(habit?.color || '#008000')
     const [howMuchRepeat, setHowMuchRepeat] = useState('кожного дня');
-    const [isEnabledNotification, setIsEnabledNotification] = useState(false);
+    const [isEnabledNotification, setIsEnabledNotification] = useState(habit?.isEnabledNotification || false);
     const [date, setDate] = useState(new Date());
     const sheetRef = useRef(null);
 
@@ -62,7 +65,7 @@ export default function CreateHabit({parentRef}) {
 
             const id = await v4()
 
-            const habit = JSON.stringify({
+            const data = JSON.stringify({
                 id,
                 name,
                 description,
@@ -76,14 +79,33 @@ export default function CreateHabit({parentRef}) {
                 createdAt: new Date(),
             })
 
-            await AsyncStorage.setItem(id, habit)
+            await AsyncStorage.setItem(id, data)
 
-            alert(habit)
+            alert(data)
 
             parentRef.current.snapTo(2)
         } catch (e) {
             console.log('e', e)
         }
+    }
+
+    const onUpdate = async () => {
+        const data = JSON.stringify(Object.assign(habit, {
+            name,
+            description,
+            color,
+            howMuchRepeat,
+            isEnabledNotification,
+            hour: date.getHours(),
+            minute: date.getMinutes()
+        }))
+
+        await AsyncStorage.mergeItem(habit.id, data)
+
+        alert(data)
+
+        parentRef.current.snapTo(2)
+
     }
 
     useEffect(() => {
@@ -119,7 +141,7 @@ export default function CreateHabit({parentRef}) {
             token = (await Notifications.getExpoPushTokenAsync()).data;
             console.log(token);
         } else {
-            alert('Must use physical device for Push Notifications');
+            // alert('Must use physical device for Push Notifications');
         }
 
         if (Platform.OS === 'android') {
@@ -148,17 +170,21 @@ export default function CreateHabit({parentRef}) {
                     <Pressable onPress={() => parentRef.current.snapTo(2)}>
                         <Text style={styles.cancelTitle}>Відмінити!</Text>
                     </Pressable>
-                    <Pressable onPress={() => onSubmit()}>
+                    {habit && <Pressable onPress={() => onUpdate()}>
+                        <Text style={styles.mainTitle}>Оновити звичку</Text>
+                    </Pressable>}
+
+                    {!habit && <Pressable onPress={() => onSubmit()}>
                         <Text style={styles.mainTitle}>Створити звичку</Text>
-                    </Pressable>
-                    <Pressable onPress={() => onSubmit()}>
+                    </Pressable>}
+                    <Pressable onPress={() => habit ? onUpdate() : onSubmit()}>
                         <Text style={styles.saveTitle}>Зберегти</Text>
                     </Pressable>
                 </View>
 
                 <View style={styles.nameContainer}>
                     <Text styles={styles.nameTitle}>Назва</Text>
-                    <TextInput styles={styles.nameInput} maxLength={100} autoFocus={true}
+                    <TextInput styles={styles.nameInput} maxLength={100} autoFocus={true} value={name}
                                placeholder={"Задярка, медитація і т.д."}
                                onChangeText={name => setName(name)}
                                paddingTop={20}
@@ -170,7 +196,7 @@ export default function CreateHabit({parentRef}) {
 
             <View style={styles.root}>
                 <Text styles={styles.nameTitle}>Мотивуй себе</Text>
-                <TextInput styles={styles.nameInput} maxLength={100}
+                <TextInput styles={styles.nameInput} value={description} maxLength={100}
                            placeholder={"А ну-ка давай !!!"}
                            onChangeText={description => setDescription(description)}
                            paddingTop={20}

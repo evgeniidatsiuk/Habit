@@ -6,7 +6,7 @@ import {HorizontalRule} from "../../HorizontalRule";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-export default function ShowHabit({parentRef, habit, setHabit}) {
+export default function ShowHabit({parentRef, habitEditRef, habit}) {
   const styles = StyleSheet.create({
     root: {
       display: 'flex',
@@ -127,7 +127,12 @@ export default function ShowHabit({parentRef, habit, setHabit}) {
             <Pressable>
               <Text style={styles.mainTitle}>{habit.title}</Text>
             </Pressable>
-            <Pressable>
+            <Pressable onPress={() => {
+              parentRef.current.snapTo(2)
+              console.log('habit', habit)
+              // setSelectedHabit(habit)
+              habitEditRef.current.snapTo(0)
+            }}>
               <Text style={styles.saveTitle}>Редагувати</Text>
             </Pressable>
           </View>
@@ -165,7 +170,6 @@ export default function ShowHabit({parentRef, habit, setHabit}) {
         <HorizontalRule/>
         <Calendar
             style={{
-              borderWidth: 1,
               height: 350
             }}
             theme={{

@@ -51,6 +51,7 @@ const dates = getLast5Days();
 export default function App() {
   const [habits, setHabits] = useState([])
   const [habit, setHabit] = useState(undefined)
+  const [selectedHabit, setSelectedHabit] = useState(undefined)
 
   useEffect(() => {
     const items = []
@@ -76,10 +77,11 @@ export default function App() {
 
   const sheetRef = useRef(null);
   const habitDetailsRef = useRef(null);
+  const habitEditRef = useRef(null);
 
   const renderContent = () => (
       <View style={{backgroundColor: '#fff', width: '100%', height: '100%'}}>
-        <CreateHabit parentRef={sheetRef}/>
+        <CreateHabit parentRef={sheetRef} habit={selectedHabit}/>
       </View>
   );
 
@@ -88,7 +90,16 @@ export default function App() {
         backgroundColor: '#fff', width: '100%',
         height: '100%'
       }}>
-        {habit && <ShowHabit parentRef={habitDetailsRef} habit={habit}/>}
+        {habit && <ShowHabit parentRef={habitDetailsRef} habitEditRef={habitEditRef} habit={habit}/>}
+      </View>
+  );
+
+  const editHabitContent = () => (
+      <View style={{
+        backgroundColor: '#fff', width: '100%',
+        height: '100%'
+      }}>{console.log('selectedHabit', selectedHabit)}
+        {selectedHabit && <CreateHabit parentRef={habitDetailsRef} habitEditRef={habitEditRef} habit={selectedHabit}/>}
       </View>
   );
 
@@ -126,7 +137,7 @@ export default function App() {
           </View>
           <FlatList
               data={habits}
-              renderItem={({item}) => <HabitView parentRef={habitDetailsRef} setHabit={setHabit} item={item}/>}
+              renderItem={({item}) => <HabitView parentRef={habitDetailsRef} setSelectedHabit={setSelectedHabit}  setHabit={setHabit} item={item}/>}
               keyExtractor={(item) => item.id.toString()}
               showsVerticalScrollIndicator={false}
               showsHorizontalScrollIndicator={false}
@@ -149,6 +160,17 @@ export default function App() {
             onCloseEnd={() => {
               setHabit(undefined)
             }}
+        />
+
+        <BottomSheetBehavior
+            ref={habitEditRef}
+            snapPoints={[855, 0, 0]}
+            borderRadius={10}
+            initialSnap={2}
+            renderContent={editHabitContent}
+            // onCloseEnd={() => {
+            //   // setSelectedHabit(undefined)
+            // }}
         />
 
       </>

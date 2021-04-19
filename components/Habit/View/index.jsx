@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
-export default function HabitView({parentRef, item, setHabit}) {
+export default function HabitView({parentRef, item, setSelectedHabit, setHabit}) {
 
     const styles = StyleSheet.create({
         component: {
@@ -34,6 +34,7 @@ export default function HabitView({parentRef, item, setHabit}) {
             onPress={() => {
                 parentRef.current.snapTo(0)
                 setHabit(item)
+                setSelectedHabit(item)
                 // setHabit(Object.assign(habit, { progress: habit.progress + 5 }))
             }}
         >

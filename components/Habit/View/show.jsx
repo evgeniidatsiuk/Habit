@@ -1,6 +1,7 @@
 import React from 'react';
-import {Pressable, StyleSheet, Text, View} from 'react-native';
+import {Dimensions, Pressable, StyleSheet, Text, View} from 'react-native';
 import {Calendar} from "react-native-calendars";
+import {LineChart} from "react-native-chart-kit";
 
 export default function ShowHabit({ parentRef, habit }) {
   const styles = StyleSheet.create({
@@ -69,6 +70,29 @@ export default function ShowHabit({ parentRef, habit }) {
       alignItems: 'center',
     },
   });
+
+  const data = {
+    labels: ["January", "February", "March", "April", "May", "June"],
+    datasets: [
+      {
+        data: [20, 45, 28, 80, 99, 43],
+        color: (opacity = 1) => habit.color, // optional
+        strokeWidth: 2 // optional
+      }
+    ],
+    legend: ['Графік розвитку привички'] // optional
+  };
+
+  const chartConfig = {
+    backgroundGradientFrom: 'white',
+    backgroundGradientFromOpacity: 0,
+    backgroundGradientTo: 'white',
+    backgroundGradientToOpacity: 0,
+    color: (opacity = 1) => `rgba(0,0,0, ${opacity})`,
+    strokeWidth: 2, // optional, default 3
+    barPercentage: 0.5,
+    useShadowColorFromDataset: false // optional
+  };
   return (
       <>
         <View
@@ -110,6 +134,15 @@ export default function ShowHabit({ parentRef, habit }) {
             </View>
           </View>
 
+        </View>
+
+        <View>
+          <LineChart
+              data={data}
+              width={Dimensions.get("window").width}
+              height={220}
+              chartConfig={chartConfig}
+          />
         </View>
 
         <Calendar/>

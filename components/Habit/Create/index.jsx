@@ -43,19 +43,22 @@ export default function CreateHabit({parentRef}) {
     const toggleSwitchNotification = () => setIsEnabledNotification(previousState => !previousState);
 
     const onSubmit = async () => {
+        let notificationId
 
         try {
-            const notificationId = await Notifications.scheduleNotificationAsync({
-                content: {
-                    title: name,
-                    body: description,
-                    data: {},
-                },
-                trigger: {
-                    hour: date.getHours(),
-                    minute: date.getMinutes()
-                },
-            });
+            if (isEnabledNotification) {
+                notificationId = await Notifications.scheduleNotificationAsync({
+                    content: {
+                        title: name,
+                        body: description,
+                        data: {},
+                    },
+                    trigger: {
+                        hour: date.getHours(),
+                        minute: date.getMinutes()
+                    },
+                });
+            }
 
             const id = await v4()
 
@@ -76,6 +79,8 @@ export default function CreateHabit({parentRef}) {
             await AsyncStorage.setItem(id, habit)
 
             alert(habit)
+
+            parentRef.current.snapTo(2)
         } catch (e) {
             console.log('e', e)
         }

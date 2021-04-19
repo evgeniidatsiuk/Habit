@@ -146,6 +146,9 @@ export default function App() {
             borderRadius={10}
             initialSnap={2}
             renderContent={showHabitContent}
+            onCloseEnd={() => {
+              setHabit(undefined)
+            }}
         />
 
       </>

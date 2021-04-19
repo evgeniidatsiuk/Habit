@@ -4,7 +4,7 @@ import {Calendar} from "react-native-calendars";
 import {LineChart} from "react-native-chart-kit";
 import {HorizontalRule} from "../../HorizontalRule";
 
-export default function ShowHabit({ parentRef, habit }) {
+export default function ShowHabit({parentRef, habit, setHabit}) {
   const styles = StyleSheet.create({
     root: {
       display: 'flex',
@@ -116,7 +116,9 @@ export default function ShowHabit({ parentRef, habit }) {
             }}
         >
           <View style={styles.container}>
-            <Pressable onPress={() => parentRef.current.snapTo(2)}>
+            <Pressable onPress={() => {
+              parentRef.current.snapTo(2)
+            }}>
               <Text style={styles.cancelTitle}>Повернутись</Text>
             </Pressable>
             <Pressable>
@@ -158,7 +160,17 @@ export default function ShowHabit({ parentRef, habit }) {
           />
         </View>
         <HorizontalRule/>
-        <Calendar/>
+        <Calendar
+            style={{
+              borderWidth: 1,
+              height: 350
+            }}
+            theme={{
+              selectedDayBackgroundColor: habit.color,
+              todayTextColor: habit.color,
+              dotColor: habit.color,
+              arrowColor: habit.color,
+            }}/>
         <HorizontalRule/>
         <View style={styles.removeContainer}>
           <Pressable>

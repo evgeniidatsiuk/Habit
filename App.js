@@ -168,9 +168,9 @@ export default function App() {
             borderRadius={10}
             initialSnap={2}
             renderContent={editHabitContent}
-            // onCloseEnd={() => {
-            //   // setSelectedHabit(undefined)
-            // }}
+            onCloseEnd={() => {
+              setSelectedHabit(undefined)
+            }}
         />
 
       </>

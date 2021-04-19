@@ -87,6 +87,26 @@ export default function ShowHabit({ parentRef, habit }) {
           <Text style={styles.saveTitle}>Редагувати</Text>
         </Pressable>
       </View>
+
+
+      <View style={styles.container} paddingTop={40}>
+        <View>
+          <View>
+            <Text style={styles.mainTitle}>Регульність</Text>
+          </View>
+          <View>
+            <Text style={styles.mainTitle}>{habit.howMuchRepeat}</Text>
+          </View>
+        </View>
+        <View style={{paddingBottom: 20}}>
+          <View>
+            <Text style={styles.mainTitle}>Нагадати мені</Text>
+          </View>
+          <View>
+            <Text style={styles.mainTitle}>{habit.hour}:{habit.minute}</Text>
+          </View>
+        </View>
+      </View>
     </View>
 
     // <View>

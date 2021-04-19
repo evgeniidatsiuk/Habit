@@ -3,6 +3,8 @@ import {Dimensions, Pressable, StyleSheet, Text, View} from 'react-native';
 import {Calendar} from "react-native-calendars";
 import {LineChart} from "react-native-chart-kit";
 import {HorizontalRule} from "../../HorizontalRule";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 export default function ShowHabit({parentRef, habit, setHabit}) {
   const styles = StyleSheet.create({
@@ -106,6 +108,7 @@ export default function ShowHabit({parentRef, habit, setHabit}) {
     barPercentage: 0.5,
     useShadowColorFromDataset: false // optional
   };
+
   return (
       <>
         <View
@@ -173,7 +176,10 @@ export default function ShowHabit({parentRef, habit, setHabit}) {
             }}/>
         <HorizontalRule/>
         <View style={styles.removeContainer}>
-          <Pressable>
+          <Pressable onPress={async () => {
+            await AsyncStorage.removeItem(habit.id)
+            parentRef.current.snapTo(2)
+          }}>
             <Text style={styles.removeTitle}>Видалити привичку</Text></Pressable>
         </View>
         <HorizontalRule/>

@@ -1,8 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { TouchableOpacity, Text, View, StyleSheet } from 'react-native';
+import BottomSheetBehavior from 'reanimated-bottom-sheet';
+import ShowHabit from './show'
 
 export default function HabitView({ item }) {
-  const [habit, setHabit] = useState(item)
+  const [habit, setHabit] = useState(item);
+  const sheetRef = useRef(null);
+
   const styles = StyleSheet.create({
     component: {
       height: 100,
@@ -12,7 +16,7 @@ export default function HabitView({ item }) {
       padding: 20,
       display: 'flex',
       justifyContent: 'space-between',
-      overflow: 'hidden'
+      overflow: 'hidden',
     },
     progress: {
       width: 36 + item.progress * 6.8,
@@ -26,13 +30,33 @@ export default function HabitView({ item }) {
   });
 
   const { component, progress } = styles;
-  
+
+  const renderContent = () => (
+    <View style={{ backgroundColor: '#fff', width: '100%', height: '100%' }}>
+      <ShowHabit parentRef={sheetRef} habit={habit}/>
+    </View>
+  );
 
   return (
-    <TouchableOpacity style={component} onPress={() => setHabit(Object.assign(habit, {progress: habit.progress + 5}))}>
-      <View style={progress} />
-      <Text>{habit.progress}%</Text>
-      <Text>{habit.title}</Text>
-    </TouchableOpacity>
+    <>
+      <TouchableOpacity
+        style={component}
+        onPress={() =>
+          sheetRef.current.snapTo(0)
+          // setHabit(Object.assign(habit, { progress: habit.progress + 5 }))
+        }
+      >
+        <View style={progress} />
+        <Text>{habit.progress}%</Text>
+        <Text>{habit.title}</Text>
+      </TouchableOpacity>
+      <BottomSheetBehavior
+        ref={sheetRef}
+        snapPoints={[855, 0, 0]}
+        borderRadius={10}
+        initialSnap={2}
+        renderContent={renderContent}
+      />
+    </>
   );
 }

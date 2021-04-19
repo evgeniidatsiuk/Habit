@@ -1,13 +1,13 @@
-import React, {useRef} from 'react';
-import 'react-native-get-random-values'
-import {FlatList, Pressable, StyleSheet, Text, View} from 'react-native';
-import {AntDesign} from '@expo/vector-icons';
-import HabitView from './components/Habit/View';
+import React, { useRef } from 'react';
+import 'react-native-get-random-values';
+import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
+import { AntDesign } from '@expo/vector-icons';
+import HabitView from './components/Habit/View/index';
 import getLast5Days from './hooks/getLast5Days';
 import CreateHabit from './components/Habit/Create/index';
 import BottomSheetBehavior from 'reanimated-bottom-sheet';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import ShowHabit from './components/Habit/View/show';
 
 const styles = StyleSheet.create({
   container: {
@@ -46,18 +46,18 @@ const styles = StyleSheet.create({
 
 const { container, header, title, text, primaryDate, secondaryDate } = styles;
 
-const habits = []
+const habits = [];
 AsyncStorage.getAllKeys((err, keys) => {
-  console.log('keys', keys)
-  console.log('err', err)
+  console.log('keys', keys);
+  console.log('err', err);
   AsyncStorage.multiGet(keys, (err, stores) => {
-    console.log('stores', stores)
+    console.log('stores', stores);
     stores.map((result, i, store) => {
       // get at each store's key/value so you can work with it
       let key = store[i][0];
       let value = JSON.parse(store[i][1]);
-      console.log(value)
-      habits.push({...value, title: value.name, progress: i+5})
+      console.log(value);
+      habits.push({ ...value, title: value.name, progress: i + 5 });
     });
   });
 });
@@ -68,36 +68,35 @@ export default function App() {
   const sheetRef = useRef(null);
 
   const renderContent = () => (
-      <View style={{backgroundColor: '#fff', width: '100%', height: '100%'}}>
-        <CreateHabit parentRef={sheetRef}/>
-      </View>
+    <View style={{ backgroundColor: '#fff', width: '100%', height: '100%' }}>
+      <CreateHabit parentRef={sheetRef} />
+    </View>
   );
 
-
   return (
-      <>
-        <View style={container}>
-          <View style={header}>
-            <AntDesign name="menuunfold" size={36} color="black"/>
-            <Pressable onPress={() => sheetRef.current.snapTo(0)}>
-              <AntDesign name="plus" size={36} color="black"/>
-            </Pressable>
+    <>
+      <View style={container}>
+        <View style={header}>
+          <AntDesign name="menuunfold" size={36} color="black" />
+          <Pressable onPress={() => sheetRef.current.snapTo(0)}>
+            <AntDesign name="plus" size={36} color="black" />
+          </Pressable>
         </View>
         <View style={header}>
           <Text style={title}>Habit</Text>
           <Text style={text}>
             {dates.map((date, index) => (
-                <View style={styles.dates} key={index}>
-                  <Text
-                      style={
-                        index !== dates.length - 1 ? secondaryDate : primaryDate
-                      }
-                  >
-                    {date.date}
-                  </Text>
-                  <Text
-                      style={
-                        index !== dates.length - 1 ? secondaryDate : primaryDate
+              <View style={styles.dates} key={index}>
+                <Text
+                  style={
+                    index !== dates.length - 1 ? secondaryDate : primaryDate
+                  }
+                >
+                  {date.date}
+                </Text>
+                <Text
+                  style={
+                    index !== dates.length - 1 ? secondaryDate : primaryDate
                   }
                 >
                   {date.weekday}
@@ -115,11 +114,11 @@ export default function App() {
         />
       </View>
       <BottomSheetBehavior
-          ref={sheetRef}
-          snapPoints={[855, 0, 0]}
-          borderRadius={10}
-          initialSnap={2}
-          renderContent={renderContent}
+        ref={sheetRef}
+        snapPoints={[855, 0, 0]}
+        borderRadius={10}
+        initialSnap={2}
+        renderContent={renderContent}
       />
     </>
   );

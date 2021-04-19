@@ -7,6 +7,7 @@ import getLast5Days from './hooks/getLast5Days';
 import CreateHabit from './components/Habit/Create/index';
 import BottomSheetBehavior from 'reanimated-bottom-sheet';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ShowHabit from "./components/Habit/View/show";
 
 const styles = StyleSheet.create({
   container: {
@@ -49,6 +50,7 @@ const dates = getLast5Days();
 
 export default function App() {
   const [habits, setHabits] = useState([])
+  const [habit, setHabit] = useState(undefined)
 
   useEffect(() => {
     const items = []
@@ -77,6 +79,15 @@ export default function App() {
   const renderContent = () => (
       <View style={{backgroundColor: '#fff', width: '100%', height: '100%'}}>
         <CreateHabit parentRef={sheetRef}/>
+      </View>
+  );
+
+  const showHabitContent = () => (
+      <View style={{
+        backgroundColor: '#fff', width: '100%',
+        height: '100%'
+      }}>
+        {habit && <ShowHabit parentRef={sheetRef} habit={habit}/>}
       </View>
   );
 
@@ -115,7 +126,7 @@ export default function App() {
           </View>
           <FlatList
               data={habits}
-              renderItem={({item}) => <HabitView item={item}/>}
+              renderItem={({item}) => <HabitView parentRef={sheetRef} setHabit={setHabit} item={item}/>}
               keyExtractor={(item) => item.id.toString()}
               showsVerticalScrollIndicator={false}
               showsHorizontalScrollIndicator={false}
@@ -127,6 +138,14 @@ export default function App() {
             borderRadius={10}
             initialSnap={2}
             renderContent={renderContent}
+        />
+
+        <BottomSheetBehavior
+            ref={sheetRef}
+            snapPoints={[855, 0, 0]}
+            borderRadius={10}
+            initialSnap={2}
+            renderContent={showHabitContent}
         />
       </>
   );

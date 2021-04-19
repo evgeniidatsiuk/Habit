@@ -22,7 +22,7 @@ export default function HabitView({ item }) {
       width: 36 + item.progress * 6.8,
       height: 36 + item.progress * 6.8,
       borderRadius: 18 + item.progress * 10,
-      backgroundColor: 'red',
+      backgroundColor: item.color,
       position: 'absolute',
       top: 10 - item.progress * 3.5,
       left: 12 - item.progress * 3.5,

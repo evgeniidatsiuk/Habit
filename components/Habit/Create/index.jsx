@@ -208,7 +208,6 @@ export default function CreateHabit({parentRef}) {
                             value={isEnabledNotification}/>
                 </View>
 
-
                 <HorizontalRule/>
 
             </View>

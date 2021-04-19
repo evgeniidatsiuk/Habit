@@ -1,5 +1,6 @@
 import React from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
+import {Calendar} from "react-native-calendars";
 
 export default function ShowHabit({ parentRef, habit }) {
   const styles = StyleSheet.create({
@@ -69,45 +70,50 @@ export default function ShowHabit({ parentRef, habit }) {
     },
   });
   return (
-    <View
-      style={{
-        paddingTop: 20,
-        paddingHorizontal: 20,
-        backgroundColor: habit.color,
-      }}
-    >
-      <View style={styles.container}>
-        <Pressable onPress={() => parentRef.current.snapTo(2)}>
-          <Text style={styles.cancelTitle}>Повернутись</Text>
-        </Pressable>
-        <Pressable>
-          <Text style={styles.mainTitle}>{habit.title}</Text>
-        </Pressable>
-        <Pressable>
-          <Text style={styles.saveTitle}>Редагувати</Text>
-        </Pressable>
-      </View>
+      <>
+        <View
+            style={{
+              paddingTop: 20,
+              paddingHorizontal: 20,
+              backgroundColor: habit.color,
+            }}
+        >
+          <View style={styles.container}>
+            <Pressable onPress={() => parentRef.current.snapTo(2)}>
+              <Text style={styles.cancelTitle}>Повернутись</Text>
+            </Pressable>
+            <Pressable>
+              <Text style={styles.mainTitle}>{habit.title}</Text>
+            </Pressable>
+            <Pressable>
+              <Text style={styles.saveTitle}>Редагувати</Text>
+            </Pressable>
+          </View>
 
 
-      <View style={styles.container} paddingTop={40}>
-        <View>
-          <View>
-            <Text style={styles.mainTitle}>Регульність</Text>
+          <View style={styles.container} paddingTop={40}>
+            <View>
+              <View>
+                <Text style={styles.mainTitle}>Регульність</Text>
+              </View>
+              <View>
+                <Text style={styles.mainTitle}>{habit.howMuchRepeat}</Text>
+              </View>
+            </View>
+            <View style={{paddingBottom: 20}}>
+              <View>
+                <Text style={styles.mainTitle}>Нагадати мені</Text>
+              </View>
+              <View>
+                <Text style={styles.mainTitle}>{habit.hour}:{habit.minute}</Text>
+              </View>
+            </View>
           </View>
-          <View>
-            <Text style={styles.mainTitle}>{habit.howMuchRepeat}</Text>
-          </View>
+
         </View>
-        <View style={{paddingBottom: 20}}>
-          <View>
-            <Text style={styles.mainTitle}>Нагадати мені</Text>
-          </View>
-          <View>
-            <Text style={styles.mainTitle}>{habit.hour}:{habit.minute}</Text>
-          </View>
-        </View>
-      </View>
-    </View>
+
+        <Calendar/>
+      </>
 
     // <View>
     //     <Pressable><Text>Редагувати</Text></Pressable>

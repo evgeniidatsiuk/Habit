@@ -138,7 +138,7 @@ export default function ShowHabit({parentRef, habitEditRef, habit}) {
           </View>
 
 
-          <View style={styles.container} paddingTop={40}>
+          <View style={styles.container} paddingTop={60}>
             <View>
               <View>
                 <Text style={styles.mainTitle}>Регульність</Text>

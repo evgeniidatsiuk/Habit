@@ -54,7 +54,7 @@ export default function CreateHabit({parentRef, habit}) {
                     content: {
                         title: name,
                         body: description,
-                        data: {},
+                        data: { date: 'data'},
                     },
                     trigger: {
                         hour: date.getHours(),

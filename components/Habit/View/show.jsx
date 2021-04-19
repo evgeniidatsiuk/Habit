@@ -2,6 +2,7 @@ import React from 'react';
 import {Dimensions, Pressable, StyleSheet, Text, View} from 'react-native';
 import {Calendar} from "react-native-calendars";
 import {LineChart} from "react-native-chart-kit";
+import {HorizontalRule} from "../../HorizontalRule";
 
 export default function ShowHabit({ parentRef, habit }) {
   const styles = StyleSheet.create({
@@ -69,6 +70,18 @@ export default function ShowHabit({ parentRef, habit }) {
     remindSwitch: {
       alignItems: 'center',
     },
+
+    removeContainer: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      paddingTop: 20,
+      paddingBottom: 20
+    },
+    removeTitle: {
+      fontSize: 16,
+      fontWeight: 'bold'
+    }
   });
 
   const data = {
@@ -135,7 +148,7 @@ export default function ShowHabit({ parentRef, habit }) {
           </View>
 
         </View>
-
+        <HorizontalRule/>
         <View>
           <LineChart
               data={data}
@@ -144,12 +157,15 @@ export default function ShowHabit({ parentRef, habit }) {
               chartConfig={chartConfig}
           />
         </View>
-
+        <HorizontalRule/>
         <Calendar/>
+        <HorizontalRule/>
+        <View style={styles.removeContainer}>
+          <Pressable>
+            <Text style={styles.removeTitle}>Видалити привичку</Text></Pressable>
+        </View>
+        <HorizontalRule/>
       </>
 
-    // <View>
-    //     <Pressable><Text>Редагувати</Text></Pressable>
-    // </View>
   );
 }

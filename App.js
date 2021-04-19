@@ -6,6 +6,8 @@ import HabitView from './components/Habit/View';
 import getLast5Days from './hooks/getLast5Days';
 import CreateHabit from './components/Habit/Create/index';
 import BottomSheetBehavior from 'reanimated-bottom-sheet';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const styles = StyleSheet.create({
   container: {
@@ -44,48 +46,21 @@ const styles = StyleSheet.create({
 
 const { container, header, title, text, primaryDate, secondaryDate } = styles;
 
-const habits = [
-  {
-    id: 1,
-    title: 'Bimba',
-    progress: 0,
-  },
-  {
-    id: 2,
-    title: 'Bimba',
-    progress: 5,
-  },
-  {
-    id: 3,
-    title: 'Bimba',
-    progress: 24,
-  },
-  {
-    id: 4,
-    title: 'Bimba',
-    progress: 75,
-  },
-  {
-    id: 5,
-    title: 'Bimba',
-    progress: 90,
-  },
-  {
-    id: 6,
-    title: 'Bimba',
-    progress: 95,
-  },
-  {
-    id: 7,
-    title: 'Bimba',
-    progress: 100,
-  },
-  {
-    id: 8,
-    title: 'Bimba',
-    progress: 24,
-  },
-];
+const habits = []
+AsyncStorage.getAllKeys((err, keys) => {
+  console.log('keys', keys)
+  console.log('err', err)
+  AsyncStorage.multiGet(keys, (err, stores) => {
+    console.log('stores', stores)
+    stores.map((result, i, store) => {
+      // get at each store's key/value so you can work with it
+      let key = store[i][0];
+      let value = JSON.parse(store[i][1]);
+      console.log(value)
+      habits.push({...value, title: value.name, progress: i+5})
+    });
+  });
+});
 
 const dates = getLast5Days();
 

@@ -43,44 +43,42 @@ export default function CreateHabit({parentRef}) {
     const toggleSwitchNotification = () => setIsEnabledNotification(previousState => !previousState);
 
     const onSubmit = async () => {
-        const notificationId = await Notifications.scheduleNotificationAsync({
-            content: {
-                title: name,
-                body: description,
-                data: {},
-            },
-            trigger: {
+
+        try {
+            const notificationId = await Notifications.scheduleNotificationAsync({
+                content: {
+                    title: name,
+                    body: description,
+                    data: {},
+                },
+                trigger: {
+                    hour: date.getHours(),
+                    minute: date.getMinutes()
+                },
+            });
+
+            const id = await v4()
+
+            const habit = JSON.stringify({
+                id,
+                name,
+                description,
+                color,
+                howMuchRepeat,
+                isEnabledNotification,
                 hour: date.getHours(),
-                minute: date.getMinutes()
-            },
-        });
+                minute: date.getMinutes(),
+                expoPushToken,
+                notificationId,
+                createdAt: new Date(),
+            })
 
-        const habit = JSON.stringify({
-            id: await v4(),
-            name,
-            description,
-            color,
-            howMuchRepeat,
-            isEnabledNotification,
-            hour: date.getHours(),
-            minute: date.getMinutes(),
-            expoPushToken,
-            notificationId,
-            createdAt: new Date(),
-        })
+            await AsyncStorage.setItem(id, habit)
 
-        alert(habit)
-
-        let habits = JSON.parse(await AsyncStorage.getItem('@Habits'))
-
-        if (habits) {
-            habits.push(habit)
-        } else {
-            habits = [habit]
+            alert(habit)
+        } catch (e) {
+            console.log('e', e)
         }
-
-
-        await AsyncStorage.setItem('@Habits', JSON.stringify(habits))
     }
 
     useEffect(() => {
